@@ -150,7 +150,7 @@ RCT_EXPORT_METHOD(unsubscribe:(nonnull NSString *) clientRef topic:(NSString *)t
 
 RCT_EXPORT_METHOD(publish:(nonnull NSString *) clientRef topic:(NSString *)topic data:(NSString*)data qos:(nonnull NSNumber *)qos retain:(BOOL)retain) {
     [[[self clients] objectForKey:clientRef] publish:topic
-                                                data:[data dataUsingEncoding:NSUTF8StringEncoding]
+                                                data:[data dataUsingEncoding:NSISOLatin1StringEncoding]
                                                  qos:qos
                                               retain:retain];
     
