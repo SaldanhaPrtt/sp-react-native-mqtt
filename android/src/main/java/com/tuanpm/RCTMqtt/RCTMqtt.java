@@ -36,6 +36,7 @@ import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Base64;
 
 import javax.annotation.Nullable;
 import javax.net.ssl.SSLContext;
@@ -376,12 +377,12 @@ public class RCTMqtt implements MqttCallbackExtended {
     public void publish(@NonNull final String topic, @NonNull final String payload, final int qos,
             final boolean retain) {
         try {
-            byte[] encodedPayload = payload.getBytes("UTF-8");
+            byte[] encodedPayload = Base64.getDecoder().decode(payload);
             MqttMessage message = new MqttMessage(encodedPayload);
             message.setQos(qos);
             message.setRetained(retain);
             client.publish(topic, message);
-        } catch (UnsupportedEncodingException | MqttException e) {
+        } catch ( MqttException e) {
             e.printStackTrace();
         }
     }
@@ -452,7 +453,11 @@ public class RCTMqtt implements MqttCallbackExtended {
 
         WritableMap data = Arguments.createMap();
         data.putString("topic", topic);
-        data.putString("data", new String(message.getPayload()));
+
+        // encode data to base64
+        byte[] payload = message.getPayload();
+        String base64 = Base64.getEncoder().encodeToString(payload);
+        data.putString("data", base64);
         data.putInt("qos", message.getQos());
         data.putBoolean("retain", message.isRetained());
 
