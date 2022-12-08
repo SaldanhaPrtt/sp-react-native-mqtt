@@ -240,19 +240,20 @@
     [self.manager sendData:data topic:topic qos:[qos intValue] retain:retain];
 }
 
-- (void)handleMessage:(NSData *)data onTopic:(NSString *)topic retained:(BOOL)retained {
-    NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+ - (void)handleMessage:(NSData *)data onTopic:(NSString *)topic retained:(BOOL)retained {
+    // encode data to base64
+    NSString *base64Encoded = [data base64EncodedStringWithOptions:0];
+    NSString *dataString = [NSString stringWithFormat:@"%@", base64Encoded];
     [self.emitter sendEventWithName:@"mqtt_events"
-                               body:@{
-                                      @"event": @"message",
-                                      @"clientRef": self.clientRef,
-                                      @"message": @{
-                                              @"topic": topic,
-                                              @"data": dataString,
-                                              @"retain": [NSNumber numberWithBool:retained]
-                                              }
-                                      }];
-    
+                            body:@{
+                                    @"event": @"message",
+                                    @"clientRef": self.clientRef,
+                                    @"message": @{
+                                            @"topic": topic,
+                                            @"data": dataString,
+                                            @"retain": [NSNumber numberWithBool:retained]
+                                            }
+                                    }];
 }
 
 
