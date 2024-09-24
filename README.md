@@ -1,3 +1,5 @@
+# THIS IS A FORK THAT CONVERTS THE NATIVE MQTT BUFFERS TO WORK WITH NON ASCII CHARS
+
 [![npm](https://img.shields.io/npm/dt/react-native-mqtt.svg)]()
 
 ## Announcements:
