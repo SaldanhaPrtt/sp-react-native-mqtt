@@ -28,8 +28,6 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-
-
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -57,7 +55,6 @@ import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.Base64;
 
 import javax.annotation.Nullable;
 import javax.net.ssl.KeyManager;
@@ -456,7 +453,7 @@ public class RCTMqtt implements MqttCallbackExtended {
     public void publish(@NonNull final String topic, @NonNull final String payload, final int qos,
             final boolean retain) {
         try {
-            byte[] encodedPayload = Base64.getDecoder().decode(payload);
+            byte[] encodedPayload = android.util.Base64.decode(payload, android.util.Base64.DEFAULT);
             MqttMessage message = new MqttMessage(encodedPayload);
             message.setQos(qos);
             message.setRetained(retain);
@@ -535,7 +532,7 @@ public class RCTMqtt implements MqttCallbackExtended {
 
         // encode data to base64
         byte[] payload = message.getPayload();
-        String base64 = Base64.getEncoder().encodeToString(payload);
+        String base64 = android.util.Base64.encodeToString(payload, android.util.Base64.DEFAULT);
         data.putString("data", base64);
         data.putInt("qos", message.getQos());
         data.putBoolean("retain", message.isRetained());
